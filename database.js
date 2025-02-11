@@ -31,6 +31,17 @@ sql3 = (`CREATE TABLE IF NOT EXISTS cards (
 )`);
 db.run(sql3);
 
+const createGame = (leader, maxCards, callback) =>{
+    const gameCode  = Math.random().toString(36).substring(2, 6).toUpperCase(); // Generate a unique code
+    const sql = (`INSERT INTO gamedetails (code, leader, max_cards) VALUES(?,?,?)`)
+    db.run(sql,[gameCode, leader, maxCards],  function(err) {
+        if (err) {
+            return callback(err, null); // Send error back if something goes wrong
+        }
+        callback(null, gameCode ); // Send gameCode back only after database insertion is done
+    }
+);
+}
 //Drop Table
 //db.run('DROP TABLE gamedetails');
 
@@ -38,7 +49,7 @@ db.run(sql3);
 // Insert data into table
 // sql = `INSERT INTO gamedetails(code, leader, max_cards)VALUES(?,?,?)`;
 // db.run(sql,[345,"Josh", 6], (err)=>{
-//     if (err) return console.error(err.message);h
+//     if (err) return console.error(err.message);
 // });
 
 // Update data
@@ -62,4 +73,4 @@ db.run(sql3);
 //     })
 // })
 
-module.exports = db;
+module.exports = {db, createGame};
